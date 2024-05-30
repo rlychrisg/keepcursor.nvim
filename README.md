@@ -1,4 +1,4 @@
-## What?
+## About
 KeepCursor.nvim is a set of toggle functions to keep the cursor at the top or bottom of the screen while moving. For example, if you have a long list of search results to cycle through, with `ToggleCursorTop` enabled, you can do so with more new information to react to and work with, rather than old information.
 
 ## How to install
