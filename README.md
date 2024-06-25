@@ -2,15 +2,26 @@
 KeepCursor.nvim is a set of toggle functions to keep the cursor at the top or bottom of the screen while moving. For example, if you have a long list of search results to cycle through, with `ToggleCursorTop` enabled, you can do so with more new information to react to and work with, rather than old information.
 
 ## How to install
-Lazy
+To install with lazy
+```
+{"rlychrisg/keepcursor.nvim"},
+```
+
+Keys can also be bound here, so that the plugin will only load once a KeepCursor function is called. Be sure to change the keys and opts to your liking.
 ```
     {
-        "rlychrisg/keepcursor.nvim"
+        "rlychrisg/keepcursor.nvim",
+        keys = {
+            { '<leader>zt', ':lua require("keepcursor").ToggleCursorTop()<CR>', desc = "KeepCursor toggle cursor top" },
+            { '<leader>zb', ':lua require("keepcursor").ToggleCursorBot(3)<CR>', desc = "KeepCursor toggle cursor bottom" },
+            { '<leader>zz', ':lua require("keepcursor").ToggleCursorMid()<CR>', desc = "KeepCursor toggle cursor middle" },
+            { '<leader><leader>z', ':lua require("keepcursor").DisableKeepCursor()<CR>', desc = "KeepCursor disable all functions" },
+        }
     },
 ```
 
 ## How to use
-Functions can be called dirrectly from the command line or bound to a key. No configuration is needed, no default keys are set, and any command you have no use for can be safely ignored. The toggle commands can be given a number to temporarily set the scroll off to a new value, until KeepCursor functions are disabled.
+Functions can be called directly from the command line or bound to a key. No configuration is needed, no default keys are set, and any command you have no use for can be safely ignored. The toggle commands can be given a number to temporarily set the scroll off to a new value, until KeepCursor functions are disabled.
 
 ```
 -- Toggle whether or not the cursor should be kept 2 lines from the top.
