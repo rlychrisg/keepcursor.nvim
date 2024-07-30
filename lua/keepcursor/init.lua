@@ -5,7 +5,7 @@ function M.ToggleCursorTop(newscrolloff)
         -- disable previous autocmd
         vim.cmd[[autocmd! KeepCursor]] -- doing this in lua throws errors sometimes so for now sticking with vimscript
         -- variable to track state
-        _G.KeepCursorAt = 'off'
+        _G.KeepCursorAt = nil
         -- return to previous value
         vim.opt.scrolloff = _G.prev_scrolloff
         print("KeepCursor: Scrolloff returned to default.")
@@ -35,7 +35,7 @@ end
 function M.ToggleCursorBot(newscrolloff)
     if _G.KeepCursorAt == "bottom" then
         vim.cmd[[autocmd! KeepCursor]]
-        _G.KeepCursorAt = "off"
+        _G.KeepCursorAt = nil
         vim.opt.scrolloff = _G.prev_scrolloff
         print("KeepCursor: Scrolloff returned to default.")
     else
@@ -59,7 +59,7 @@ end
 function M.ToggleCursorMid()
     if _G.KeepCursorAt == "middle" then
         vim.cmd[[autocmd! KeepCursor]]
-        _G.KeepCursorAt = "off"
+        _G.KeepCursorAt = nil
         vim.opt.scrolloff = _G.prev_scrolloff
         print("KeepCursor: Scrolloff returned to default.")
     else
@@ -79,12 +79,25 @@ end
 
 -- disable any cursor autocmd functions
 function M.DisableKeepCursor()
-    if _G.KeepCursorAt ~= "off" then
+    if _G.KeepCursorAt ~= nil then
         vim.cmd[[autocmd! KeepCursor]]
-        _G.KeepCursorAt = "off"
+        _G.KeepCursorAt = nil
         -- and return scroll off to default
         vim.opt.scrolloff = _G.prev_scrolloff
         print("KeepCursor: Scrolloff returned to default.")
+    end
+end
+
+-- for lualine
+function M.KeepCursorStatus()
+    if _G.KeepCursorAt == nil then
+        return nil
+    elseif _G.KeepCursorAt == "top" then
+        return "  top"
+    elseif _G.KeepCursorAt == "middle" then
+        return "  mid"
+    elseif _G.KeepCursorAt == "bottom" then
+        return "  bot"
     end
 end
 

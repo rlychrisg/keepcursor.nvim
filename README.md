@@ -39,6 +39,33 @@ vim.api.nvim_set_keymap('n', '<leader><leader>z', ':lua require("keepcursor").Di
 
 `:lua ToggleCursorTop(int)` will keep the cursor at the top of the screen, at a distance of whatever integar is passed to it. Calling this function again will disable the autocmd and return the scrolloff to its previous value. `:lua ToggleCursorBot(int)` will do the same but for the bottom. If you want to disable any active functions you can use `:lua DisableKeepCursor` to restore previous scroll off behaviour. Previous scroll off value is only taken when enabling a function from the default state, and remembered until a function is toggled off or disabled.
 
+## Lualine
+For a visual indication of any function that may be currently active, you can pass `require('keepcursor').KeepCursorStatus` as a component in your lualine config. This is an excerpt from my own, in which I have adjusted the color to make it stand out among the encoding and filetype information, as well as a function to hide the component and its separator if no KeepCursor is active (see lualine docs for more info on these settings).
+```
+require('lualine').setup {
+    sections = {
+        lualine_a = {'mode'},
+        lualine_b = {'branch', 'diff', 'diagnostics'},
+        lualine_c = {},
+        lualine_x = {
+            'encoding', 'fileformat', 'filetype',
+            -- if adding options, create a new lua table within the lualine_x table
+            {
+                require('keepcursor').KeepCursorStatus,
+                color = { fg = 'Normal' },
+                cond = function ()
+                    -- this is a variable used inside keepcursor to track the state of currently enabled functions
+                    if _G.KeepCursorAt ~= nil then
+                        return true
+                    end
+                end
+            }
+        },
+        lualine_y = {'progress'},
+        lualine_z = {'location'}
+    },
+}
 
+```
 
 
