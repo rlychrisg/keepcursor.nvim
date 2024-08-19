@@ -1,5 +1,20 @@
 local M = {}
 
+-- config options
+--      enabled by default
+--          cursor top
+--          cursor bottom
+--          cursor middle
+--          cursor right
+--          cursor left
+--      new scroll off, will need testing, get others done first
+
+
+M.config = {
+    enabled_on_start_v = "none",
+    enabled_on_start_h = "none"
+    }
+
 function M.ToggleCursorTop(newscrolloff)
     if _G.KeepCursorAt == "top" then
         -- disable previous autocmd
@@ -27,7 +42,13 @@ function M.ToggleCursorTop(newscrolloff)
         vim.api.nvim_create_autocmd("CursorMoved", { command = "normal! zt", group = "KeepCursor" })
 
         _G.KeepCursorAt = "top"
-        print("KeepCursor: keeping cursor at top.")
+
+        -- if func starts on startup then don't show message
+        if _G.onstart_v == true then
+            _G.onstart_v = false
+        else
+            print("KeepCursor: keeping cursor at top.")
+        end
     end
 end
 
@@ -51,7 +72,12 @@ function M.ToggleCursorBot(newscrolloff)
         vim.api.nvim_create_augroup("KeepCursor", { clear = true })
         vim.api.nvim_create_autocmd("CursorMoved", { command = "normal! zb", group = "KeepCursor" })
         _G.KeepCursorAt = "bottom"
-        print("KeepCursor: keeping cursor at bottom.")
+
+        if _G.onstart_v == true then
+            _G.onstart_v = false
+        else
+            print("KeepCursor: keeping cursor at bottom.")
+        end
     end
 end
 
@@ -72,10 +98,14 @@ function M.ToggleCursorMid()
         vim.api.nvim_create_augroup("KeepCursor", { clear = true })
         vim.api.nvim_create_autocmd("CursorMoved", { command = "normal! zz", group = "KeepCursor" })
         _G.KeepCursorAt = "middle"
-        print("KeepCursor: keeping cursor at middle.")
+
+        if _G.onstart_v == true then
+            _G.onstart_v = false
+        else
+            print("KeepCursor: keeping cursor at middle.")
+        end
     end
 end
-
 
 -- disable any cursor autocmd functions
 function M.DisableKeepCursor()
@@ -87,6 +117,71 @@ function M.DisableKeepCursor()
         print("KeepCursor: Scrolloff returned to default.")
     end
 end
+
+-- sideways cursor movement, should be separate from verti
+function M.ToggleCursorRight(newscrolloff)
+    if _G.KeepSideCursorAt == "right" then
+        vim.cmd[[autocmd! KeepSideCursor]] -- doing this in lua throws errors sometimes so for now sticking with vimscript
+        _G.KeepSideCursorAt = nil
+        vim.opt.sidescrolloff = _G.prev_sidescrolloff
+        print("KeepCursor: Scrolloff returned to default.")
+    else
+        -- if the other one is enabled
+        if _G.KeepSideCursorAt == "left" then
+            vim.cmd[[autocmd! KeepSideCursor]]
+            _G.KeepSideCursorAt = "right"
+        else
+            _G.prev_sidescrolloff = vim.opt.sidescrolloff:get()
+        end
+
+        if newscrolloff then
+            vim.opt.sidescrolloff = newscrolloff
+        end
+        vim.api.nvim_create_augroup("KeepSideCursor", { clear = true })
+        vim.api.nvim_create_autocmd("CursorMoved", { command = "normal! ze", group = "KeepSideCursor" })
+
+        _G.KeepSideCursorAt = "right"
+
+        if _G.onstart_h == true then
+            _G.onstart_h = false
+        else
+            print("KeepCursor: keeping cursor at right.")
+        end
+    end
+end
+
+-- sideways cursor movement, should be separate from verti
+function M.ToggleCursorLeft(newscrolloff)
+    if _G.KeepSideCursorAt == "left" then
+        vim.cmd[[autocmd! KeepSideCursor]] -- doing this in lua throws errors sometimes so for now sticking with vimscript
+        _G.KeepSideCursorAt = nil
+        vim.opt.sidescrolloff = _G.prev_sidescrolloff
+        print("KeepCursor: Scrolloff returned to default.")
+    else
+        -- if the other one is enabled
+        if _G.KeepSideCursorAt == "right" then
+            vim.cmd[[autocmd! KeepSideCursor]]
+            _G.KeepSideCursorAt = "left"
+        else
+            _G.prev_sidescrolloff = vim.opt.sidescrolloff:get()
+        end
+
+        if newscrolloff then
+            vim.opt.sidescrolloff = newscrolloff
+        end
+        vim.api.nvim_create_augroup("KeepSideCursor", { clear = true })
+        vim.api.nvim_create_autocmd("CursorMoved", { command = "normal! zs", group = "KeepSideCursor" })
+
+        _G.KeepSideCursorAt = "left"
+
+        if _G.onstart_h == true then
+            _G.onstart_h = false
+        else
+            print("KeepCursor: keeping cursor at left.")
+        end
+    end
+end
+
 
 -- for lualine
 function M.KeepCursorStatus()
@@ -100,5 +195,37 @@ function M.KeepCursorStatus()
         return "  bot"
     end
 end
+
+function M.setup(opts)
+    -- if different values are passed to user config, use those instead
+    M.config = vim.tbl_deep_extend("force", M.config, opts or {})
+
+    -- vertical
+    local enabled_on_start_v = M.config.enabled_on_start_v
+
+    if enabled_on_start_v == "top" then
+        _G.onstart_v = true
+        M.ToggleCursorTop()
+    elseif enabled_on_start_v == "middle" then
+        _G.onstart_v = true
+        M.ToggleCursorMid()
+    elseif enabled_on_start_v == "bottom" then
+        _G.onstart_v = true
+        M.ToggleCursorBot()
+    end
+
+    local enabled_on_start_h = M.config.enabled_on_start_h
+    if enabled_on_start_h == "left" then
+        _G.onstart_h = true
+        M.ToggleCursorLeft()
+    elseif enabled_on_start_h == "right" then
+        _G.onstart_h = true
+        M.ToggleCursorRight()
+    end
+
+
+
+end
+
 
 return M
