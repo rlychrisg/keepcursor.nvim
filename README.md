@@ -3,12 +3,12 @@ KeepCursor.nvim is a collection of functions to keep the screen positioned aroun
 
 ## Installation and configuration
 To install with lazy
-```
+```lua
 {"rlychrisg/keepcursor.nvim"},
 ```
 
 By default no function begins on startup. You can however enable this behavour for both horizontal and vertical scrolling.
-```
+```lua
     {
         "rlychrisg/keepcursor.nvim",
         config = function ()
@@ -23,7 +23,7 @@ By default no function begins on startup. You can however enable this behavour f
 ## How to use
 Functions can be called directly from the command line or bound to a key. No configuration is needed, no default keys are set, and any command you have no use for can be safely ignored. The toggle commands can be given a number to temporarily set the scroll off to a new value, until KeepCursor functions are disabled.
 
-```
+```lua
 -- Toggle whether or not the cursor should be kept 2 lines from the top.
 vim.api.nvim_set_keymap('n', '<leader>zt', ':lua require("keepcursor").ToggleCursorTop(2)<CR>', { noremap = true, silent = true })
 
@@ -48,7 +48,7 @@ vim.api.nvim_set_keymap('n', '<leader>zs', ':lua require("keepcursor").ToggleCur
 
 ## Lualine
 For a visual indication of any function that may be currently active, you can pass `require('keepcursor').KeepCursorStatus` as a component in your lualine config. This is an excerpt from my own, in which I have adjusted the color to make it stand out among the encoding and filetype information, as well as a function to hide the component and its separator if no KeepCursor is active (see lualine docs for more info on these settings). Note this only works for vertical functions for now.
-```
+```lua
 require('lualine').setup {
     sections = {
         lualine_a = {'mode'},
