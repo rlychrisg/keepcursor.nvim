@@ -1,5 +1,5 @@
 ## About
-KeepCursor is a collection of functions to manage autocmds which keep the screen positioned around the cursor. For eg, `:ToggleCursorTop` effectively pressed `zt` after every cursor movement, and `:ToggleCursorRight()` uses `ze`
+KeepCursor is a collection of functions to manage autocmds which keep the screen positioned around the cursor. For eg, `:ToggleCursorTop` effectively pressed `zt` after every cursor movement, and `:ToggleCursorRight` uses `ze`
 
 ## Installation and configuration
 To install with lazy
@@ -27,12 +27,16 @@ Some example keybinds would be:
 ```lua
 vim.api.nvim_set_keymap('n', '<leader>zt', ':ToggleCursorTop<CR>',
 { noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned at top on cursor move" })
+
 vim.api.nvim_set_keymap('n', '<leader>zb', ':ToggleCursorBot 2<CR>', -- optional argument, temporarily sets scroll off to 2
 { noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned at bottom on cursor move" })
+
 vim.api.nvim_set_keymap('n', '<leader>zz', ':ToggleCursorMid<CR>',
 { noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned at middle on cursor move" })
+
 vim.api.nvim_set_keymap('n', '<leader>ze', ':ToggleCursorRight 30<CR>', -- optional argument, temporarily sets side scroll off to 30
 { noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned to the right on cursor move" })
+
 vim.api.nvim_set_keymap('n', '<leader>zs', ':ToggleCursorLeft<CR>',
 { noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned to the left on cursor move" })
 
