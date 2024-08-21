@@ -1,5 +1,5 @@
 ## About
-KeepCursor.nvim is a collection of functions to keep the screen positioned around your cursor as you scroll. for example, `ToggleCursorTop()` keeps the cursor at the top of the screen, by triggering an autocmd for `zt` every time the cursor moves. This is handy for allowing the user more look ahead when quickly scrolling through search results. `ToggleCursorRight()` aims to make dealing with long lines less tedious, as the screen will always return to the main chunk of text without having to press `ze` so much.
+KeepCursor is a collection of functions to manage autocmds which keep the screen positioned around the cursor. For eg, `:ToggleCursorTop` effectively pressed `zt` after every cursor movement, and `:ToggleCursorRight()` uses `ze`
 
 ## Installation and configuration
 To install with lazy
@@ -21,29 +21,21 @@ By default no function begins on startup. You can however enable this behavour f
 ```
 
 ## How to use
-Functions can be called directly from the command line or bound to a key. No configuration is needed, no default keys are set, and any command you have no use for can be safely ignored. The toggle commands can be given a number to temporarily set the scroll off to a new value, until KeepCursor functions are disabled.
+Functions can be called directly from the command line or bound to a key. To temporarily change the scroll off value, a number can also be passed to Top, Bottom, Left and Right functions. Enabling one vertical function will disable any that might currently be active, and when this function is disabled, scroll off will return to whatever you have set to default. The same is also true of horizontal functions.
 
+Some example keybinds would be:
 ```lua
--- Toggle whether or not the cursor should be kept 2 lines from the top.
-vim.api.nvim_set_keymap('n', '<leader>zt', ':lua require("keepcursor").ToggleCursorTop(2)<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>zt', ':ToggleCursorTop<CR>',
+{ noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned at top on cursor move" })
+vim.api.nvim_set_keymap('n', '<leader>zb', ':ToggleCursorBot 2<CR>', -- optional argument, temporarily sets scroll off to 2
+{ noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned at bottom on cursor move" })
+vim.api.nvim_set_keymap('n', '<leader>zz', ':ToggleCursorMid<CR>',
+{ noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned at middle on cursor move" })
+vim.api.nvim_set_keymap('n', '<leader>ze', ':ToggleCursorRight 30<CR>', -- optional argument, temporarily sets side scroll off to 30
+{ noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned to the right on cursor move" })
+vim.api.nvim_set_keymap('n', '<leader>zs', ':ToggleCursorLeft<CR>',
+{ noremap = true, silent = true, desc = "KeepCursor: keep cursor positioned to the left on cursor move" })
 
--- Toggle whether or not the cursor should be kept at the bottom with whatever scroll off the user has set.
-vim.api.nvim_set_keymap('n', '<leader>zb', ':lua require("keepcursor").ToggleCursorBot()<CR>', { noremap = true, silent = true })
-
--- Toggle whether or not to keep the cursor in the middle.
-vim.api.nvim_set_keymap('n', '<leader>zz', ':lua require("keepcursor").ToggleCursorMid()<CR>', { noremap = true, silent = true })
-
--- Disable any vertical KeepCursor functions that are currently enabled and restore previous scroll off value.
-vim.api.nvim_set_keymap('n', '<leader><leader>z', ':lua require("keepcursor").DisableKeepCursor()<CR>', { noremap = true, silent = true })
-
--- Toggle whether or not the cursor should always stay 20 columns from
--- the right side of the screen
-vim.api.nvim_set_keymap('n', '<leader>ze', ':lua require("keepcursor").ToggleCursorRight(20)<CR>', { noremap = true, silent = true })
-
--- Toggle whether or not the cursor should stay on the left as the screen
--- scrolls to the right. I've included this purely for the sake of having
--- a complete set. I can't think of a situation where it would be helpful.
-vim.api.nvim_set_keymap('n', '<leader>zs', ':lua require("keepcursor").ToggleCursorRight(20)<CR>', { noremap = true, silent = true })
 ```
 
 ## Lualine

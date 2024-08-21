@@ -1,15 +1,5 @@
 local M = {}
 
--- config options
---      enabled by default
---          cursor top
---          cursor bottom
---          cursor middle
---          cursor right
---          cursor left
---      new scroll off, will need testing, get others done first
-
-
 M.config = {
     enabled_on_start_v = "none",
     enabled_on_start_h = "none"
@@ -33,7 +23,7 @@ function M.ToggleCursorTop(newscrolloff)
             -- if none of them are, get the scrolloff for later
             _G.prev_scrolloff = vim.opt.scrolloff:get()
         end
-        -- set new scroll off
+        -- set new scroll off, if user provides one
         if newscrolloff then
             vim.opt.scrolloff = newscrolloff
         end
@@ -145,7 +135,7 @@ function M.ToggleCursorRight(newscrolloff)
         if _G.onstart_h == true then
             _G.onstart_h = false
         else
-            print("KeepCursor: keeping cursor at right.")
+            print("KeepCursor: keeping cursor to the right.")
         end
     end
 end
@@ -177,7 +167,7 @@ function M.ToggleCursorLeft(newscrolloff)
         if _G.onstart_h == true then
             _G.onstart_h = false
         else
-            print("KeepCursor: keeping cursor at left.")
+            print("KeepCursor: keeping cursor to the left.")
         end
     end
 end
@@ -222,10 +212,35 @@ function M.setup(opts)
         _G.onstart_h = true
         M.ToggleCursorRight()
     end
-
-
-
 end
 
+-- create commands for funcs
+vim.api.nvim_create_user_command('ToggleCursorTop', function(opts)
+    local arg = tonumber(opts.args)
+    M.ToggleCursorTop(arg)
+end, { nargs = "?", })
+
+vim.api.nvim_create_user_command('ToggleCursorBot', function(opts)
+    local arg = tonumber(opts.args)
+    M.ToggleCursorBot(arg)
+end, { nargs = "?", })
+
+vim.api.nvim_create_user_command('ToggleCursorMid', function()
+    M.ToggleCursorMid()
+end, {})
+
+vim.api.nvim_create_user_command('DisableKeepCursor', function()
+    M.DisableKeepCursor()
+end, {})
+
+vim.api.nvim_create_user_command('ToggleCursorRight', function(opts)
+    local arg = tonumber(opts.args)
+    M.ToggleCursorRight(arg)
+end, { nargs = "?", })
+
+vim.api.nvim_create_user_command('ToggleCursorLeft', function(opts)
+    local arg = tonumber(opts.args)
+    M.ToggleCursorLeft(arg)
+end, { nargs = "?", })
 
 return M
