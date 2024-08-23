@@ -15,12 +15,10 @@ By default no function begins on startup. You can however enable this behavour f
 ```lua
     {
         "rlychrisg/keepcursor.nvim",
-        config = function ()
-            require('keepcursor').setup({
+        opts = {
                 enabled_on_start_v = "none", -- options are "top", "middle" and "bottom".
                 enabled_on_start_h = "none" -- options are "left" and "right".
-            })
-        end,
+            }
     },
 ```
 
