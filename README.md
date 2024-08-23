@@ -6,7 +6,7 @@ https://github.com/user-attachments/assets/87eebc34-bc3a-4d8c-9681-1070d05401ff
 KeepCursor is a collection of functions to manage autocmds which keep the screen positioned around the cursor. For eg, `:ToggleCursorTop` effectively pressed `zt` after every cursor movement, and `:ToggleCursorRight` uses `ze`
 
 ## Installation and configuration
-To install with lazy
+To install with Lazy
 ```lua
 {"rlychrisg/keepcursor.nvim"},
 ```
@@ -47,7 +47,7 @@ vim.api.nvim_set_keymap('n', '<leader>zs', ':ToggleCursorLeft<CR>',
 ```
 
 ## Lualine
-For a visual indication of any function that may be currently active, you can pass `require('keepcursor').KeepCursorStatus` as a component in your lualine config. This is an excerpt from my own, in which I have adjusted the color to make it stand out among the encoding and filetype information, as well as a function to hide the component and its separator if no KeepCursor is active (see lualine docs for more info on these settings). Note this only works for vertical functions for now.
+For a visual indication of any function that may be currently active, you can pass `require('keepcursor').KeepCursorStatus` as a component in your Lualine config. This is an excerpt from my own, in which I have adjusted the color to make it stand out among the encoding and filetype information, as well as a function to hide the component and its separator if no KeepCursor is active (see Lualine docs for more info on these settings). Note this only works for vertical functions for now.
 ```lua
 require('lualine').setup {
     sections = {
