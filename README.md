@@ -6,7 +6,7 @@ https://github.com/user-attachments/assets/87eebc34-bc3a-4d8c-9681-1070d05401ff
 KeepCursor is a collection of functions to manage autocmds which keep the screen positioned around the cursor. For eg, `:ToggleCursorTop` effectively pressed `zt` after every cursor movement, and `:ToggleCursorRight` uses `ze`.
 
 ## Installation and configuration
-To install with Lazy
+To install with Lazy:
 ```lua
 {"rlychrisg/keepcursor.nvim"},
 ```
